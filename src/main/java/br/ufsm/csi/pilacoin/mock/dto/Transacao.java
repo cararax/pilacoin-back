@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 @Builder
 @ToString
-@RequiredArgsConstructor
 public class Transacao {
     private byte[] chaveUsuarioOrigem;
     private byte[] chaveUsuarioDestino;

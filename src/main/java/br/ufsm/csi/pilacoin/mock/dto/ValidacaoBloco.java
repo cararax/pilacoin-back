@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 @Builder
 @ToString
-@RequiredArgsConstructor
 public class ValidacaoBloco {
     private String nomeValidador;
     private byte[] chavePublicaValidador;

@@ -1,6 +1,5 @@
 package br.ufsm.csi.pilacoin.mock.dto;
 
-import jakarta.persistence.Entity;
 import lombok.*;
 
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.List;
 @Setter
 @Builder
 @ToString
-@RequiredArgsConstructor
 public class Bloco {
     private Integer numeroBloco;
     private String nonceBlocoAnterior;

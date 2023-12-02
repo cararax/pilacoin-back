@@ -6,7 +6,6 @@ import lombok.*;
 @Setter
 @Builder
 @ToString
-@RequiredArgsConstructor
 public class PilaCoin {
     private Long dataCriacao;
     private byte[] chaveCriador;
