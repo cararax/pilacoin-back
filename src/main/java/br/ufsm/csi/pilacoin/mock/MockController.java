@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MockController {
 
-    MockService service;
+    private final MockService service;
 
     @GetMapping("/pilaCoin")
     public PilaCoin getPilaCoin() {
