@@ -22,7 +22,7 @@ public class DifficultyService {
 
     private Dificuldade dificuldadeAtual = new Dificuldade();
 
-    @RabbitListener(queues = "${queue.dificuldade}:dificuldade")
+    @RabbitListener(queues = "${queue.dificuldade}")
     public void listen(String message) {
         try {
             Dificuldade dificuldadeRecebida = convertJsonToDifficulty(message);
