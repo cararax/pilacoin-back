@@ -1,2 +1,41 @@
-{
-    }
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pilacoin
+    username: user
+    password: pass
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  rabbitmq:
+    host: srv-ceesp.proj.ufsm.br
+    port: 8082
+    username: guest
+    password: guest
+
+queue:
+  dificuldade: dificuldade
+  pila-minerado: pila-minerado
+  pila-validado: pila-validado
+  descobre-bloco: descobre-bloco
+  bloco-minerado: bloco-minerado
+  bloco-validado: bloco-validado
+  transferir-pila: transferir-pila
+
+
+pilacoin:
+  username: carara-schmitzhaus
+
+keypair:
+  algorithm: RSA
+  size: 1024
+  privateKeyPath: private_key.pem
+  publicKeyPath: public_key.pem
+
+
+
