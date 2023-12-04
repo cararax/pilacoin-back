@@ -2,10 +2,9 @@ package br.ufsm.csi.pilacoin.mock;
 
 import br.ufsm.csi.pilacoin.mock.dto.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -28,6 +27,10 @@ public class MockController {
     @GetMapping("/transacao")
     public Transacao getTransacao() {
         return service.createTransacao(null);
+    }
+    @PostMapping("/transacao")
+    public Transacao insert(@RequestBody Transacao transacao) {
+        return new ResponseEntity<>(transacao, HttpStatus.CREATED).getBody();
     }
 
     @GetMapping("/validacaoPilaCoin")
