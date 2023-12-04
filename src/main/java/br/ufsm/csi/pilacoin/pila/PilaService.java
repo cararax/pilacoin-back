@@ -41,6 +41,9 @@ public class PilaService {
 
     private MinerWorker minerWorker;
     private ObjectMapper mapper = new ObjectMapper();
+
+    private final PilaCoinRepository pilaCoinRepository;
+    private final ValidacaoPilaCoinRepository validacaoRepository;
     private final Set<PilaCoin> minedPilaCoins = Collections.synchronizedSet(new HashSet<>());
 
     public void startMining(Dificuldade dificuldade) {
@@ -72,18 +75,23 @@ public class PilaService {
     public void validatePilaCoin(String message) {
         log.info("Validating PilaCoin");
         PilaCoin pilaCoin = convertJsonToPilaCoin(message);
+        //todo: exceção quando nao tem dificuldade
         if (isCreatedByCurrentUser(pilaCoin) || isAlreadyValidated(pilaCoin) || isPilaInvalid(pilaCoin)) {
             publishMinedPila(pilaCoin);
             return;
         }
         minedPilaCoins.add(pilaCoin);
-        publishValidatedPila(generateValidationMessage(pilaCoin));
+        pilaCoinRepository.save(pilaCoin);
+        ValidacaoPilaCoin validated = generateValidationMessage(pilaCoin);
+        validacaoRepository.save(validated);
+        publishValidatedPila(validated);
         log.info("PilaCoin validated and sent to queue");
     }
 
     private PilaCoin convertJsonToPilaCoin(String message) throws JsonProcessingException {
         return mapper.readValue(message, PilaCoin.class);
     }
+
     private boolean isPilaValid(PilaCoin pilaCoin) {
         return MinerWorker.hashMeetsDifficulty(pilaCoin, dificuldadeAtual.get());
     }
