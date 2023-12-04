@@ -2,13 +2,14 @@ version: '3'
 
 services:
   db:
-    image: postgres:latest
+    image: mongo
     container_name: pilacoin-db
+    restart: always
     environment:
-      POSTGRES_DB: pilacoin
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: pass
+      MONGO_INITDB_DATABASE: pilacoin
     ports:
-      - "5432:5432"
+      - "27017:27017"
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - ./data:/data/db
