@@ -73,20 +73,26 @@ public class MinerWorker implements Runnable {
         return new BigInteger(MessageDigest.getInstance(algorithm).digest(nonceHex.getBytes(StandardCharsets.UTF_8))).abs();
     }
 
+    @SneakyThrows
     public void run() {
         log.info("Running " + threadName);
-        try {
             while (true) {
                 pilaCoin = createPilaCoin();
-                if (hashMeetsDifficulty(pilaCoin, difficulty.get())) {
-                    pilaService.publishMinedPila(pilaCoin);
-                    log.info("Thread {} mined a coin.", threadName);
+                if (isPilaInvalid(pilaCoin))
                     break;
-                }
+                pilaService.publishMinedPila(pilaCoin);
+                log.info("Thread {} mined a coin.", threadName);
+                break;
+
             }
-        } catch (NoSuchAlgorithmException e) {
-            log.error("Error while processing", e);
-        }
+    }
+
+    private boolean isPilaValid(PilaCoin pilaCoin) {
+        return hashMeetsDifficulty(pilaCoin, difficulty.get());
+    }
+
+    private boolean isPilaInvalid(PilaCoin pilaCoin) {
+        return !isPilaValid(pilaCoin);
     }
 
     private PilaCoin createPilaCoin() throws NoSuchAlgorithmException {
