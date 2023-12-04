@@ -2,10 +2,7 @@ package br.ufsm.csi.pilacoin.pila;
 
 import br.ufsm.csi.pilacoin.key.KeyPairGenerator;
 import br.ufsm.csi.pilacoin.mock.dto.Dificuldade;
-import br.ufsm.csi.pilacoin.mock.dto.PilaCoin;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -28,12 +25,12 @@ public class MinerWorker implements Runnable {
     private AtomicReference<Dificuldade> difficulty;
     private PilaCoin pilaCoin;
     private final String algorithm = "SHA-256";
-    private final int radix = 16;
+    private static final int radix = 16;
     @Value("${pilacoin.username:carara-schmitzhaus}")
     private String username;
     private final KeyPairGenerator keyPairGenerator;
     private final PilaService pilaService;
-    private ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper mapper = new ObjectMapper();
 
 
     public MinerWorker(String name, AtomicReference<Dificuldade> difficulty, KeyPairGenerator keyPairGenerator, PilaService pilaService) {
@@ -44,14 +41,8 @@ public class MinerWorker implements Runnable {
         log.info("Creating " + threadName);
     }
 
-//    private boolean hashMeetsDifficulty(PilaCoin pilaCoin, Dificuldade difficulty) {
-//        BigInteger hashNum = new BigInteger(String.valueOf(pilaCoin), radix);
-//        BigInteger difficultyNum = new BigInteger(difficulty.getDificuldade(), radix);
-//        return hashNum.compareTo(difficultyNum) < 0;
-//    }
-
     @SneakyThrows
-    boolean hashMeetsDifficulty(PilaCoin pilaCoin, Dificuldade difficulty) {
+    static boolean hashMeetsDifficulty(PilaCoin pilaCoin, Dificuldade difficulty) {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         String pilaJson = mapper.writeValueAsString(pilaCoin);
         byte[] digest = md.digest(pilaJson.getBytes(StandardCharsets.UTF_8));

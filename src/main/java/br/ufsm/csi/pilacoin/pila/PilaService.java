@@ -2,8 +2,7 @@ package br.ufsm.csi.pilacoin.pila;
 
 import br.ufsm.csi.pilacoin.key.KeyPairGenerator;
 import br.ufsm.csi.pilacoin.mock.dto.Dificuldade;
-import br.ufsm.csi.pilacoin.mock.dto.PilaCoin;
-import br.ufsm.csi.pilacoin.mock.dto.ValidacaoPilaCoin;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -64,14 +63,15 @@ public class PilaService {
 
     @SneakyThrows
     public void publishValidatedPila(ValidacaoPilaCoin validatedPilaCoin) {
-        rabbitTemplate.convertAndSend(pilaValidadoQueue, convertValidatedToJson(validatedPilaCoin));
+        rabbitTemplate.convertAndSend(pilaValidadoQueue, convertToJson(validatedPilaCoin));
         log.info("PilaCoin sent to validated queue");
     }
 
     @SneakyThrows
     @RabbitListener(queues = "${queue.pila-minerado}")
     public void validatePilaCoin(String message) {
-        PilaCoin pilaCoin = mapper.readValue(message, PilaCoin.class);
+        log.info("Validating PilaCoin");
+        PilaCoin pilaCoin = convertJsonToPilaCoin(message);
         if (isCreatedByCurrentUser(pilaCoin) || isAlreadyValidated(pilaCoin) || isPilaInvalid(pilaCoin)) {
             publishMinedPila(pilaCoin);
             return;
@@ -81,9 +81,11 @@ public class PilaService {
         log.info("PilaCoin validated and sent to queue");
     }
 
-
+    private PilaCoin convertJsonToPilaCoin(String message) throws JsonProcessingException {
+        return mapper.readValue(message, PilaCoin.class);
+    }
     private boolean isPilaValid(PilaCoin pilaCoin) {
-        return minerWorker.hashMeetsDifficulty(pilaCoin, dificuldadeAtual.get());
+        return MinerWorker.hashMeetsDifficulty(pilaCoin, dificuldadeAtual.get());
     }
 
     private boolean isPilaInvalid(PilaCoin pilaCoin) {
@@ -91,12 +93,13 @@ public class PilaService {
     }
 
     private boolean isCreatedByCurrentUser(PilaCoin pilaCoin) {
+        if (pilaCoin.getNomeCriador() == null) return false;
         return pilaCoin.getNomeCriador().equals(username);
     }
 
     @SneakyThrows
     private void resendToQueue(PilaCoin pilaCoin) {
-        rabbitTemplate.convertAndSend(pilaMineradoQueue, convertPilaToJson(pilaCoin));
+        rabbitTemplate.convertAndSend(pilaMineradoQueue, convertToJson(pilaCoin));
         log.info("PilaCoin resent to queue");
     }
 
@@ -122,15 +125,6 @@ public class PilaService {
     @SneakyThrows
     private String convertToJson(Object object) {
         return mapper.writeValueAsString(object);
-    }
-    @SneakyThrows
-    private String convertPilaToJson(PilaCoin pila) {
-        return mapper.writeValueAsString(pila);
-    }
-
-    @SneakyThrows
-    private String convertValidatedToJson(ValidacaoPilaCoin validated) {
-        return mapper.writeValueAsString(validated);
     }
 
 }
