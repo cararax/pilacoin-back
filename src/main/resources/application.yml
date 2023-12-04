@@ -1,7 +1,13 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://root:example@localhost:27017/pilacoin
+      authentication-database: admin
+      repositories.enabled: true
+      database: pilacoin
+      host: localhost
+      port: 27017
+      username: user
+      password: pass
   jpa:
     hibernate:
       ddl-auto: none
