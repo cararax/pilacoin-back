@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import br.ufsm.csi.pilacoin.mock.dto.*;
+import br.ufsm.csi.pilacoin.pila.PilaCoin;
+import br.ufsm.csi.pilacoin.pila.PilaCoinRepository;
+import br.ufsm.csi.pilacoin.pila.ValidacaoPilaCoin;
+import br.ufsm.csi.pilacoin.pila.ValidacaoPilaCoinRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +25,7 @@ public class MockService {
     // PilaCoin
     private  final String nomeCriador = "nomeCriador";
 
-    public  PilaCoin createPilaCoin() {
+    public PilaCoin createPilaCoin() {
         return PilaCoin.builder()
                 .dataCriacao(timestamp)
                 .chaveCriador(chavePublica)
@@ -69,7 +73,7 @@ public class MockService {
     // Validacao
     private  final String nomeValidador = "validador";
 
-    public  ValidacaoPilaCoin createValidacaoPilaCoin() {
+    public ValidacaoPilaCoin createValidacaoPilaCoin() {
         return ValidacaoPilaCoin.builder()
                 .nomeValidador(nomeValidador)
                 .chavePublicaValidador(chavePublica)
@@ -97,5 +101,15 @@ public class MockService {
                 .inicio(timestamp)
                 .validadeFinal(validadeFinal)
                 .build();
+    }
+
+    private final PilaCoinRepository pilaCoinRepository;
+    private final ValidacaoPilaCoinRepository validacaoRepository;
+
+    public List<PilaCoin> findAllPilaCoins() {
+        return pilaCoinRepository.findAll();
+    }
+    public List<ValidacaoPilaCoin> findallValidacoesPilaCoin() {
+        return validacaoRepository.findAll();
     }
 }

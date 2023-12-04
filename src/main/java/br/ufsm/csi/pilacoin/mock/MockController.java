@@ -1,11 +1,15 @@
 package br.ufsm.csi.pilacoin.mock;
 
 import br.ufsm.csi.pilacoin.mock.dto.*;
+import br.ufsm.csi.pilacoin.pila.PilaCoin;
+import br.ufsm.csi.pilacoin.pila.ValidacaoPilaCoin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -16,8 +20,8 @@ public class MockController {
     private final MockService service;
 
     @GetMapping("/pilaCoin")
-    public PilaCoin getPilaCoin() {
-        return service.createPilaCoin();
+    public List<PilaCoin> getPilaCoin() {
+        return service.findAllPilaCoins();
     }
 
     @GetMapping("/bloco")
@@ -31,8 +35,8 @@ public class MockController {
     }
 
     @GetMapping("/validacaoPilaCoin")
-    public ValidacaoPilaCoin getValidacaoPilaCoin() {
-        return service.createValidacaoPilaCoin();
+    public List<ValidacaoPilaCoin> getValidacaoPilaCoin() {
+        return service.findallValidacoesPilaCoin();
     }
 
     @GetMapping("/validacaoBloco")
