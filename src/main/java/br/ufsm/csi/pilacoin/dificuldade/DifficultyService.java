@@ -27,8 +27,8 @@ public class DifficultyService {
     public void listen(String message) {
         Dificuldade dificuldadeRecebida = convertJsonToDifficulty(message);
         if (isDifficultyUnchanged(dificuldadeAtual, dificuldadeRecebida)) return;
+        if (isDifficultyInvalid(dificuldadeRecebida)) return;
         dificuldadeAtual = dificuldadeRecebida;
-        if (isDifficultyInvalid(dificuldadeAtual)) return;
         pilaService.startMining(dificuldadeAtual);
     }
 
