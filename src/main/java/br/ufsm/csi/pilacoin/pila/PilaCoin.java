@@ -17,6 +17,7 @@ public class PilaCoin {
     private byte[] chaveCriador;
     private String nomeCriador;
     private String nonce;
+    private String status;
 
     // getters and setters...
 }
