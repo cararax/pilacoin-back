@@ -18,7 +18,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class DifficultyService {
 
-    PilaService pilaService;
+    private final PilaService pilaService;
     private final ObjectMapper mapper = new ObjectMapper();
     private Dificuldade dificuldadeAtual = new Dificuldade();
 
@@ -33,9 +33,12 @@ public class DifficultyService {
     }
 
     private boolean isDifficultyUpdated(Dificuldade dificuldadeAtual, Dificuldade dificuldadeRecebida) {
-        log.info((dificuldadeAtual != null) ? "Dificuldade anterior: {}" : "", dificuldadeAtual);
-        log.info("Dificuldade atualizada. Valor: {}", dificuldadeRecebida);
-        return !Objects.equals(dificuldadeAtual, dificuldadeRecebida);
+        if (!Objects.equals(dificuldadeAtual, dificuldadeRecebida)) {
+            log.info((dificuldadeAtual != null) ? "Dificuldade anterior: {}" : "", dificuldadeAtual);
+            log.info("Dificuldade atualizada. Valor: {}", dificuldadeRecebida);
+            return true;
+        }
+        return false;
     }
 
     private boolean isDifficultyUnchanged(Dificuldade dificuldadeAtual, Dificuldade dificuldadeRecebida) {
