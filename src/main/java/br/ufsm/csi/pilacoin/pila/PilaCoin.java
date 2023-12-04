@@ -1,6 +1,7 @@
-package br.ufsm.csi.pilacoin.mock.dto;
+package br.ufsm.csi.pilacoin.pila;
 
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
@@ -9,7 +10,9 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@Document
 public class PilaCoin {
+    private String id;
     private Long dataCriacao;
     private byte[] chaveCriador;
     private String nomeCriador;
