@@ -3,8 +3,11 @@ package br.ufsm.csi.pilacoin.pila;
 import br.ufsm.csi.pilacoin.key.KeyPairGenerator;
 import br.ufsm.csi.pilacoin.mock.dto.Dificuldade;
 import br.ufsm.csi.pilacoin.mock.dto.PilaCoin;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -26,10 +29,12 @@ public class MinerWorker implements Runnable {
     private PilaCoin pilaCoin;
     private final String algorithm = "SHA-256";
     private final int radix = 16;
-    @Value("${pilacoin.username}")
+    @Value("${pilacoin.username:carara-schmitzhaus}")
     private String username;
     private final KeyPairGenerator keyPairGenerator;
     private final PilaService pilaService;
+    private ObjectMapper mapper = new ObjectMapper();
+
 
     public MinerWorker(String name, AtomicReference<Dificuldade> difficulty, KeyPairGenerator keyPairGenerator, PilaService pilaService) {
         threadName = name;
@@ -39,11 +44,24 @@ public class MinerWorker implements Runnable {
         log.info("Creating " + threadName);
     }
 
-    private boolean hashMeetsDifficulty(String hash, Dificuldade difficulty) {
-        BigInteger hashNum = new BigInteger(hash, radix);
+//    private boolean hashMeetsDifficulty(PilaCoin pilaCoin, Dificuldade difficulty) {
+//        BigInteger hashNum = new BigInteger(String.valueOf(pilaCoin), radix);
+//        BigInteger difficultyNum = new BigInteger(difficulty.getDificuldade(), radix);
+//        return hashNum.compareTo(difficultyNum) < 0;
+//    }
+
+    @SneakyThrows
+    boolean hashMeetsDifficulty(PilaCoin pilaCoin, Dificuldade difficulty) {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        String pilaJson = mapper.writeValueAsString(pilaCoin);
+        byte[] digest = md.digest(pilaJson.getBytes(StandardCharsets.UTF_8));
+
+        BigInteger hashNum = new BigInteger(digest).abs();
         BigInteger difficultyNum = new BigInteger(difficulty.getDificuldade(), radix);
+
         return hashNum.compareTo(difficultyNum) < 0;
     }
+
 
     private static String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
@@ -57,36 +75,35 @@ public class MinerWorker implements Runnable {
         return hexString.toString();
     }
 
-    private String generateNonce() {
+    private BigInteger generateNonce() throws NoSuchAlgorithmException {
         byte[] nonce = new byte[32];
         random.nextBytes(nonce);
-        return bytesToHex(nonce);
+        String nonceHex = bytesToHex(nonce);
+        return new BigInteger(MessageDigest.getInstance(algorithm).digest(nonceHex.getBytes(StandardCharsets.UTF_8))).abs();
     }
 
     public void run() {
         log.info("Running " + threadName);
         try {
             while (true) {
-                String nonce = generateNonce();
-                if (hashMeetsDifficulty(nonce, difficulty.get())) {
-                    pilaCoin = createPilaCoin(nonce, username);
+                pilaCoin = createPilaCoin();
+                if (hashMeetsDifficulty(pilaCoin, difficulty.get())) {
                     pilaService.publishMinedPila(pilaCoin);
                     log.info("Thread {} mined a coin.", threadName);
                     break;
                 }
             }
-
         } catch (NoSuchAlgorithmException e) {
             log.error("Error while processing", e);
         }
     }
 
-    private PilaCoin createPilaCoin(String nonce, String username) throws NoSuchAlgorithmException {
+    private PilaCoin createPilaCoin() throws NoSuchAlgorithmException {
         return PilaCoin.builder()
                 .nomeCriador(username)
                 .chaveCriador(keyPairGenerator.getPublicKey().toString().getBytes(StandardCharsets.UTF_8))
                 .dataCriacao(new Date().getTime())
-                .nonce(new BigInteger(MessageDigest.getInstance(algorithm).digest(nonce.getBytes(StandardCharsets.UTF_8))).abs().toString())
+                .nonce(generateNonce().toString())
                 .build();
     }
 
