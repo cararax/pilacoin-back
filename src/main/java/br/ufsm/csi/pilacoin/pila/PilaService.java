@@ -93,7 +93,9 @@ public class PilaService {
     }
 
     private boolean isPilaValid(PilaCoin pilaCoin) {
-        return MinerWorker.hashMeetsDifficulty(pilaCoin, dificuldadeAtual.get());
+        boolean isValid =  MinerWorker.hashMeetsDifficulty(pilaCoin, dificuldadeAtual.get());
+        if (isValid) log.info("PilaCoin is valid");
+        return isValid;
     }
 
     private boolean isPilaInvalid(PilaCoin pilaCoin) {
@@ -102,7 +104,9 @@ public class PilaService {
 
     private boolean isCreatedByCurrentUser(PilaCoin pilaCoin) {
         if (pilaCoin.getNomeCriador() == null) return false;
-        return pilaCoin.getNomeCriador().equals(username);
+        boolean itsMine = pilaCoin.getNomeCriador().equals(username);
+        if (itsMine) log.info("PilaCoin created by current user");
+        return itsMine;
     }
 
     @SneakyThrows
@@ -112,7 +116,9 @@ public class PilaService {
     }
 
     private boolean isAlreadyValidated(PilaCoin pilaCoin) {
-        return minedPilaCoins.contains(pilaCoin);
+        boolean itsValid =  minedPilaCoins.contains(pilaCoin);
+        if (itsValid) log.info("PilaCoin already validated");
+        return itsValid;
     }
 
     @SneakyThrows
