@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -26,8 +25,7 @@ public class MinerWorker implements Runnable {
     private PilaCoin pilaCoin;
     private final String algorithm = "SHA-256";
     private static final int radix = 16;
-    @Value("${pilacoin.username:carara-schmitzhaus}")
-    private String username;
+    private String username = "carara-schmitzhaus";
     private final KeyPairGenerator keyPairGenerator;
     private final PilaService pilaService;
     private static ObjectMapper mapper = new ObjectMapper();
@@ -48,7 +46,7 @@ public class MinerWorker implements Runnable {
         byte[] digest = md.digest(pilaJson.getBytes(StandardCharsets.UTF_8));
 
         BigInteger hashNum = new BigInteger(digest).abs();
-        BigInteger difficultyNum = new BigInteger(difficulty.getDificuldade(), radix);
+        BigInteger difficultyNum = new BigInteger(difficulty.getDificuldade(), radix).abs();
 
         return hashNum.compareTo(difficultyNum) < 0;
     }
@@ -76,24 +74,19 @@ public class MinerWorker implements Runnable {
     @SneakyThrows
     public void run() {
         log.info("Running " + threadName);
-            while (true) {
-                pilaCoin = createPilaCoin();
-                if (isPilaInvalid(pilaCoin))
-                    break;
+        while (true) {
+            pilaCoin = createPilaCoin();
+            if (isPilaValid(pilaCoin)) {
                 pilaService.publishMinedPila(pilaCoin);
                 log.info("Thread {} mined a coin.", threadName);
-                break;
-
             }
+        }
     }
 
     private boolean isPilaValid(PilaCoin pilaCoin) {
         return hashMeetsDifficulty(pilaCoin, difficulty.get());
     }
 
-    private boolean isPilaInvalid(PilaCoin pilaCoin) {
-        return !isPilaValid(pilaCoin);
-    }
 
     private PilaCoin createPilaCoin() throws NoSuchAlgorithmException {
         return PilaCoin.builder()
