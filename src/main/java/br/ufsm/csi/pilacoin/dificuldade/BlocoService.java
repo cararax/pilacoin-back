@@ -4,10 +4,6 @@ import br.ufsm.csi.pilacoin.key.KeyPairGenerator;
 import br.ufsm.csi.pilacoin.mock.dto.Bloco;
 import br.ufsm.csi.pilacoin.mock.dto.Dificuldade;
 import br.ufsm.csi.pilacoin.mock.dto.ValidacaoBloco;
-import br.ufsm.csi.pilacoin.pila.MinerWorker;
-import br.ufsm.csi.pilacoin.pila.PilaCoin;
-import br.ufsm.csi.pilacoin.pila.PilaService;
-import br.ufsm.csi.pilacoin.pila.ValidacaoPilaCoin;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +19,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.security.Signature;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -76,12 +70,6 @@ public class BlocoService {
     boolean isBlocoValid(Bloco bloco) {
         return hashMeetsDifficulty(bloco, difficulty.get());
     }
-
-//    @SneakyThrows
-//    public void publishMinedBloco(Bloco bloco) {
-//        rabbitTemplate.convertAndSend(blocoMineradoQueue, convertToJson(bloco));
-//        log.info("PilaCoin sent to mined queue");
-//    }
 
     private Bloco convertJsonToPilaCoin(String message) throws JsonProcessingException {
         return mapper.readValue(message, Bloco.class);
@@ -178,6 +166,10 @@ public class BlocoService {
             hexString.append(hex);
         }
         return hexString.toString();
+    }
+
+    Bloco convertJsonToBlock(String message) throws JsonProcessingException {
+        return mapper.readValue(message, Bloco.class);
     }
 
     @SneakyThrows

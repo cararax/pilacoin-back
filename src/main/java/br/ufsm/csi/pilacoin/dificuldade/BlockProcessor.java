@@ -3,6 +3,7 @@ package br.ufsm.csi.pilacoin.dificuldade;
 import br.ufsm.csi.pilacoin.mock.dto.Bloco;
 import br.ufsm.csi.pilacoin.mock.dto.Dificuldade;
 import br.ufsm.csi.pilacoin.mock.dto.ValidacaoBloco;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -16,6 +17,8 @@ public class BlockProcessor implements Runnable {
     private String message;
     private AtomicReference<Dificuldade> difficulty;
     private BlocoService blocoService;
+    private ObjectMapper mapper = new ObjectMapper();
+
 
     public BlockProcessor(String message, AtomicReference<Dificuldade> difficulty, BlocoService blocoService) {
         this.message = message;
@@ -30,7 +33,7 @@ public class BlockProcessor implements Runnable {
             if (Objects.isNull(difficulty)) {
                 log.info("Dificuldade não definida. Bloco não será minerado");
             }
-            Bloco bloco = blocoService.convertJsonToDifficulty(message);
+            Bloco bloco = blocoService.convertJsonToBlock(message);
             bloco = blocoService.populateBloco(bloco);
 //            if (blocoService.isCreatedByCurrentUser(bloco)
 //                    || blocoService.isAlreadyValidated(bloco)) {
@@ -46,4 +49,6 @@ public class BlockProcessor implements Runnable {
             }
         }
     }
+
+
 }
