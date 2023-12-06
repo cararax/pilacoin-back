@@ -30,6 +30,8 @@ queue:
   bloco-validado: bloco-validado
   transferir-pila: transferir-pila
   report: report
+  usuario: carara-schmitzhaus
+  usuario-query: carara-schmitzhaus-query
 
 
 pilacoin:

@@ -53,7 +53,7 @@ public class PilaService {
 
     public void startMining(Dificuldade dificuldade) {
         this.dificuldadeAtual.set(dificuldade);
-        int threadNumber = 2;// Runtime.getRuntime().availableProcessors();
+        int threadNumber = 1;// Runtime.getRuntime().availableProcessors();
         log.info("Começando a minerar com a nova dificuldade: {}", dificuldadeAtual);
         log.info("Número de threads: {}", threadNumber);
 
@@ -141,7 +141,10 @@ public class PilaService {
         signature.update(pilaHash);
 
         byte[] signatureBytes = signature.sign();
-        return ValidacaoPilaCoin.builder().nomeValidador(username).chavePublicaValidador(keyPairGenerator.getPublicKey().getEncoded()).assinaturaPilaCoin(signatureBytes).pilaCoinJson(pilaCoin).build();
+        return ValidacaoPilaCoin.builder()
+                .nomeValidador(username)
+                .chavePublicaValidador(keyPairGenerator.getPublicKey().getEncoded())
+                .assinaturaPilaCoin(signatureBytes).pilaCoinJson(pilaCoin).build();
     }
 
     @SneakyThrows

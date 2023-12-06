@@ -28,23 +28,19 @@ public class BlockProcessor implements Runnable {
     @Override
     @SneakyThrows
     public void run() {
+        //Minera bloco
         while (true) {
             if (Objects.isNull(difficulty)) {
                 log.info("Dificuldade não definida. Bloco não será minerado");
             }
             Bloco bloco = blocoService.convertJsonToBlock(message);
             bloco = blocoService.populateBloco(bloco);
-//            if (blocoService.isCreatedByCurrentUser(bloco)
-//                    || blocoService.isAlreadyValidated(bloco)) {
-//                blocoService.publishMinedBlock(bloco);
-//                return;
-//            }
             if (blocoService.isBlocoValid(bloco)) {
-                ValidacaoBloco validacaoBloco = blocoService.createValidacaoBloco(bloco);
-                log.info("Bloco válido: {}", bloco);
-                blocoService.publishValidatedBlock(validacaoBloco);
+//                ValidacaoBloco validacaoBloco = blocoService.createValidacaoBloco(bloco);
+                log.info("Bloco minerado: {}", bloco);
+                blocoService.publishMinedBlock(bloco);
             } else {
-                log.info("Bloco inválido: {}", bloco);
+//                log.info("Bloco inválido: {}", bloco);
             }
         }
     }

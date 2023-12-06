@@ -58,7 +58,7 @@ public class BlocoService {
     public void listen(String message) {
         log.error("Bloco recebido: {}", message);
 
-        int numberOfThreads = 8; //altere conforme necessário
+        int numberOfThreads = 1; //altere conforme necessário
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
 
         for (int i = 0; i < numberOfThreads; i++) {
@@ -95,7 +95,7 @@ public class BlocoService {
 
     @SneakyThrows
     @RabbitListener(queues = "${queue.bloco-minerado}")
-    public void validatePilaCoin(String message) {
+    public void validateBLoco(String message) {
         log.info("Validating Block");
         Bloco bloco = convertJsonToPilaCoin(message);
         //todo: exceção quando nao tem dificuldade

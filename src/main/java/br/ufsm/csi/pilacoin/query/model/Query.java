@@ -1,12 +1,9 @@
-package br.ufsm.csi.pilacoin.bloco.model;
+package br.ufsm.csi.pilacoin.query.model;
 
-import br.ufsm.csi.pilacoin.mock.dto.Transacao;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -17,15 +14,14 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-@Document
 @JsonPropertyOrder(alphabetic = true)
 @JsonInclude(NON_NULL)
-public class Bloco {
-    private Integer numeroBloco;
-    private String nonceBlocoAnterior;
+public class Query {
+    private int idQuery;
+    private String nomeUsuario;
+    private String tipoQuery;
+    private String status;
+    private String usuarioMinerador;
     private String nonce;
-    private byte[] chaveUsuarioMinerador;
-    private String nomeUsuarioMinerador;
-    private List<Transacao> transacoes;
-
+    private int idBloco;
 }
