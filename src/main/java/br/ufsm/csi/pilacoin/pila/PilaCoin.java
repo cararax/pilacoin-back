@@ -1,7 +1,10 @@
 package br.ufsm.csi.pilacoin.pila;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Getter
 @Setter
@@ -11,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @EqualsAndHashCode
 @ToString
 @Document
+@JsonInclude(NON_NULL)
 public class PilaCoin {
     private String id;
     private Long dataCriacao;
