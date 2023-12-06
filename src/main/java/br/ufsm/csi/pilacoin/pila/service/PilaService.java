@@ -1,7 +1,12 @@
-package br.ufsm.csi.pilacoin.pila;
+package br.ufsm.csi.pilacoin.pila.service;
 
 import br.ufsm.csi.pilacoin.key.KeyPairGenerator;
-import br.ufsm.csi.pilacoin.mock.dto.Dificuldade;
+import br.ufsm.csi.pilacoin.pila.miner.MinerWorker;
+import br.ufsm.csi.pilacoin.dificuldade.model.Dificuldade;
+import br.ufsm.csi.pilacoin.pila.repository.PilaCoinRepository;
+import br.ufsm.csi.pilacoin.pila.repository.ValidacaoPilaCoinRepository;
+import br.ufsm.csi.pilacoin.pila.model.PilaCoin;
+import br.ufsm.csi.pilacoin.pila.model.ValidacaoPilaCoin;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

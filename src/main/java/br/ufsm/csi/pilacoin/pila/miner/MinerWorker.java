@@ -1,7 +1,9 @@
-package br.ufsm.csi.pilacoin.pila;
+package br.ufsm.csi.pilacoin.pila.miner;
 
 import br.ufsm.csi.pilacoin.key.KeyPairGenerator;
-import br.ufsm.csi.pilacoin.mock.dto.Dificuldade;
+import br.ufsm.csi.pilacoin.dificuldade.model.Dificuldade;
+import br.ufsm.csi.pilacoin.pila.model.PilaCoin;
+import br.ufsm.csi.pilacoin.pila.service.PilaService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -10,7 +12,6 @@ import lombok.extern.log4j.Log4j2;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;

@@ -1,13 +1,12 @@
-package br.ufsm.csi.pilacoin.dificuldade;
+package br.ufsm.csi.pilacoin.bloco.miner;
 
-import br.ufsm.csi.pilacoin.mock.dto.Bloco;
-import br.ufsm.csi.pilacoin.mock.dto.Dificuldade;
-import br.ufsm.csi.pilacoin.mock.dto.ValidacaoBloco;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import br.ufsm.csi.pilacoin.bloco.model.Bloco;
+import br.ufsm.csi.pilacoin.bloco.model.ValidacaoBloco;
+import br.ufsm.csi.pilacoin.bloco.service.BlocoService;
+import br.ufsm.csi.pilacoin.dificuldade.model.Dificuldade;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;

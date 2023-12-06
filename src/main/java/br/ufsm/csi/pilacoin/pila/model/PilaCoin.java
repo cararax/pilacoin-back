@@ -1,10 +1,8 @@
-package br.ufsm.csi.pilacoin.mock.dto;
+package br.ufsm.csi.pilacoin.pila.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -17,12 +15,13 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @ToString
 @Document
 @JsonInclude(NON_NULL)
-public class Bloco {
-    private Integer numeroBloco;
-    private String nonceBlocoAnterior;
+public class PilaCoin {
+    private String id;
+    private Long dataCriacao;
+    private byte[] chaveCriador;
+    private String nomeCriador;
     private String nonce;
-    private byte[] chaveUsuarioMinerador;
-    private String nomeUsuarioMinerador;
-    private List<Transacao> transacoes;
+    private String status;
 
+    // getters and setters...
 }

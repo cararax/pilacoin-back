@@ -29,6 +29,7 @@ queue:
   bloco-minerado: bloco-minerado
   bloco-validado: bloco-validado
   transferir-pila: transferir-pila
+  report: report
 
 
 pilacoin:
@@ -40,5 +41,7 @@ keypair:
   privateKeyPath: private_key.pem
   publicKeyPath: public_key.pem
 
-
+#logging:
+#  level:
+#    root: error
 

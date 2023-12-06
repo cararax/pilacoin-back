@@ -1,7 +1,8 @@
-package br.ufsm.csi.pilacoin.dificuldade;
+package br.ufsm.csi.pilacoin.dificuldade.service;
 
-import br.ufsm.csi.pilacoin.mock.dto.Dificuldade;
-import br.ufsm.csi.pilacoin.pila.PilaService;
+import br.ufsm.csi.pilacoin.bloco.service.BlocoService;
+import br.ufsm.csi.pilacoin.dificuldade.model.Dificuldade;
+import br.ufsm.csi.pilacoin.pila.service.PilaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

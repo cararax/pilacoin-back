@@ -1,9 +1,10 @@
-package br.ufsm.csi.pilacoin.dificuldade;
+package br.ufsm.csi.pilacoin.bloco.service;
 
+import br.ufsm.csi.pilacoin.bloco.miner.BlockProcessor;
+import br.ufsm.csi.pilacoin.bloco.model.Bloco;
+import br.ufsm.csi.pilacoin.bloco.model.ValidacaoBloco;
 import br.ufsm.csi.pilacoin.key.KeyPairGenerator;
-import br.ufsm.csi.pilacoin.mock.dto.Bloco;
-import br.ufsm.csi.pilacoin.mock.dto.Dificuldade;
-import br.ufsm.csi.pilacoin.mock.dto.ValidacaoBloco;
+import br.ufsm.csi.pilacoin.dificuldade.model.Dificuldade;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,7 @@ public class BlocoService {
     private final Set<Bloco> minedBlocks = Collections.synchronizedSet(new HashSet<>());
 
 
-    void setBlocoDifficulty(Dificuldade difficulty) {
+    public void setBlocoDifficulty(Dificuldade difficulty) {
         log.info("Dificuldade do bloco atualizada: {}", difficulty);
         this.difficulty.set(difficulty);
     }
@@ -67,7 +68,7 @@ public class BlocoService {
 
         executorService.shutdown();
     }
-    boolean isBlocoValid(Bloco bloco) {
+    public boolean isBlocoValid(Bloco bloco) {
         return hashMeetsDifficulty(bloco, difficulty.get());
     }
 
@@ -142,7 +143,7 @@ public class BlocoService {
         if (itsMine) log.info("PilaCoin created by current user");
         return false;
     }
-    Bloco populateBloco(Bloco bloco) {
+    public Bloco populateBloco(Bloco bloco) {
         bloco.setChaveUsuarioMinerador(keyPairGenerator.getPublicKey().toString().getBytes(StandardCharsets.UTF_8));
         bloco.setNomeUsuarioMinerador(username);
         bloco.setNonce(generateNonce().toString());
@@ -168,7 +169,7 @@ public class BlocoService {
         return hexString.toString();
     }
 
-    Bloco convertJsonToBlock(String message) throws JsonProcessingException {
+    public Bloco convertJsonToBlock(String message) throws JsonProcessingException {
         return mapper.readValue(message, Bloco.class);
     }
 

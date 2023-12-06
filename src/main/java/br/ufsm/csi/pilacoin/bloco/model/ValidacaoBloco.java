@@ -1,8 +1,8 @@
-package br.ufsm.csi.pilacoin.pila;
+package br.ufsm.csi.pilacoin.bloco.model;
 
+import br.ufsm.csi.pilacoin.bloco.model.Bloco;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -10,15 +10,12 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @Setter
 @Builder
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@Document
 @JsonInclude(NON_NULL)
-public class ValidacaoPilaCoin {
-    private String id;
+public class ValidacaoBloco {
     private String nomeValidador;
     private byte[] chavePublicaValidador;
-    private byte[] assinaturaPilaCoin;
-    private PilaCoin pilaCoinJson;
+    private byte[] assinaturaBloco;
+    private Bloco bloco;
 
+    // getters and setters...
 }

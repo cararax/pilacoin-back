@@ -1,4 +1,4 @@
-package br.ufsm.csi.pilacoin.mock.dto;
+package br.ufsm.csi.pilacoin.dificuldade.model;
 
 import lombok.*;
 

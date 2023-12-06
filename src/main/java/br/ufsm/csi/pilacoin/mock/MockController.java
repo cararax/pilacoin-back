@@ -1,8 +1,11 @@
 package br.ufsm.csi.pilacoin.mock;
 
+import br.ufsm.csi.pilacoin.bloco.model.Bloco;
+import br.ufsm.csi.pilacoin.bloco.model.ValidacaoBloco;
+import br.ufsm.csi.pilacoin.dificuldade.model.Dificuldade;
 import br.ufsm.csi.pilacoin.mock.dto.*;
-import br.ufsm.csi.pilacoin.pila.PilaCoin;
-import br.ufsm.csi.pilacoin.pila.ValidacaoPilaCoin;
+import br.ufsm.csi.pilacoin.pila.model.PilaCoin;
+import br.ufsm.csi.pilacoin.pila.model.ValidacaoPilaCoin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

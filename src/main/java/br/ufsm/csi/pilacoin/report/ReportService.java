@@ -1,4 +1,4 @@
-package br.ufsm.csi.pilacoin.dificuldade;
+package br.ufsm.csi.pilacoin.report;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

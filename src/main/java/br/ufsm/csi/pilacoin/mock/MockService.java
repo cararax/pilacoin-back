@@ -4,11 +4,14 @@ package br.ufsm.csi.pilacoin.mock;
 import java.util.Arrays;
 import java.util.List;
 
+import br.ufsm.csi.pilacoin.bloco.model.Bloco;
+import br.ufsm.csi.pilacoin.bloco.model.ValidacaoBloco;
+import br.ufsm.csi.pilacoin.dificuldade.model.Dificuldade;
 import br.ufsm.csi.pilacoin.mock.dto.*;
-import br.ufsm.csi.pilacoin.pila.PilaCoin;
-import br.ufsm.csi.pilacoin.pila.PilaCoinRepository;
-import br.ufsm.csi.pilacoin.pila.ValidacaoPilaCoin;
-import br.ufsm.csi.pilacoin.pila.ValidacaoPilaCoinRepository;
+import br.ufsm.csi.pilacoin.pila.model.PilaCoin;
+import br.ufsm.csi.pilacoin.pila.repository.PilaCoinRepository;
+import br.ufsm.csi.pilacoin.pila.model.ValidacaoPilaCoin;
+import br.ufsm.csi.pilacoin.pila.repository.ValidacaoPilaCoinRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +58,7 @@ public class MockService {
     private  final Integer numeroBloco = 1;
     private  final String nomeUsuarioMinerador = "minerador";
 
-    public  Bloco createBloco() {
+    public Bloco createBloco() {
         List<Transacao> transacoes = Arrays
                 .asList(createTransacao("tr1"),
                         createTransacao("tr2"),
@@ -82,7 +85,7 @@ public class MockService {
                 .build();
     }
 
-    public  ValidacaoBloco createValidacaoBloco() {
+    public ValidacaoBloco createValidacaoBloco() {
         return ValidacaoBloco.builder()
                 .nomeValidador(nomeValidador)
                 .chavePublicaValidador(chavePublica)
@@ -95,7 +98,7 @@ public class MockService {
     private  final String dificuldade = "123456";
     private  final Long validadeFinal = 23412341234L;
 
-    public  Dificuldade createDificuldade() {
+    public Dificuldade createDificuldade() {
         return Dificuldade.builder()
                 .dificuldade(dificuldade)
                 .inicio(timestamp)
