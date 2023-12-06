@@ -40,7 +40,7 @@ public class MinerWorker implements Runnable {
     }
 
     @SneakyThrows
-    static boolean hashMeetsDifficulty(PilaCoin pilaCoin, Dificuldade difficulty) {
+    public static boolean hashMeetsDifficulty(PilaCoin pilaCoin, Dificuldade difficulty) {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         String pilaJson = mapper.writeValueAsString(pilaCoin);
         byte[] digest = md.digest(pilaJson.getBytes(StandardCharsets.UTF_8));
@@ -64,7 +64,8 @@ public class MinerWorker implements Runnable {
         return hexString.toString();
     }
 
-    private BigInteger generateNonce() throws NoSuchAlgorithmException {
+    @SneakyThrows
+    private BigInteger generateNonce() {
         byte[] nonce = new byte[32];
         random.nextBytes(nonce);
         String nonceHex = bytesToHex(nonce);
@@ -88,7 +89,7 @@ public class MinerWorker implements Runnable {
     }
 
 
-    private PilaCoin createPilaCoin() throws NoSuchAlgorithmException {
+    private PilaCoin createPilaCoin() {
         return PilaCoin.builder()
                 .nomeCriador(username)
                 .chaveCriador(keyPairGenerator.getPublicKey().toString().getBytes(StandardCharsets.UTF_8))

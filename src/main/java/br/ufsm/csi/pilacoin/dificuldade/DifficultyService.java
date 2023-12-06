@@ -19,17 +19,22 @@ import java.util.Objects;
 public class DifficultyService {
 
     private final PilaService pilaService;
+    private final BlocoService blocoService;
     private final ObjectMapper mapper = new ObjectMapper();
     private Dificuldade dificuldadeAtual = new Dificuldade();
 
     @SneakyThrows
     @RabbitListener(queues = "${queue.dificuldade}")
     public void listen(String message) {
+        //todo: tratar quando dificuldade for nula
+        //pilaService e blocoService precisam
+        //salvar dificuldade?
         Dificuldade dificuldadeRecebida = convertJsonToDifficulty(message);
         if (isDifficultyUnchanged(dificuldadeAtual, dificuldadeRecebida)) return;
         if (isDifficultyInvalid(dificuldadeRecebida)) return;
         dificuldadeAtual = dificuldadeRecebida;
         pilaService.startMining(dificuldadeAtual);
+        blocoService.setBlocoDifficulty(dificuldadeAtual);
     }
 
     private boolean isDifficultyUpdated(Dificuldade dificuldadeAtual, Dificuldade dificuldadeRecebida) {

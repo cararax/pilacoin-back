@@ -48,7 +48,7 @@ public class PilaService {
 
     public void startMining(Dificuldade dificuldade) {
         this.dificuldadeAtual.set(dificuldade);
-        int threadNumber = Runtime.getRuntime().availableProcessors();
+        int threadNumber = 2;// Runtime.getRuntime().availableProcessors();
         log.info("Começando a minerar com a nova dificuldade: {}", dificuldadeAtual);
         log.info("Número de threads: {}", threadNumber);
 
@@ -76,14 +76,17 @@ public class PilaService {
         log.info("Validating PilaCoin");
         PilaCoin pilaCoin = convertJsonToPilaCoin(message);
         //todo: exceção quando nao tem dificuldade
-        if (isCreatedByCurrentUser(pilaCoin) || isAlreadyValidated(pilaCoin) || isPilaInvalid(pilaCoin)) {
+        if (isCreatedByCurrentUser(pilaCoin) || isAlreadyValidated(pilaCoin)) {
             publishMinedPila(pilaCoin);
             return;
         }
-        minedPilaCoins.add(pilaCoin);
-        pilaCoinRepository.save(pilaCoin);
+
+        if (isPilaInvalid(pilaCoin)) return;
+        log.error("VALIDOU");
         ValidacaoPilaCoin validated = generateValidationMessage(pilaCoin);
+        pilaCoinRepository.save(pilaCoin);
         validacaoRepository.save(validated);
+        minedPilaCoins.add(pilaCoin);
         publishValidatedPila(validated);
         log.info("PilaCoin validated and sent to queue");
     }
@@ -93,7 +96,7 @@ public class PilaService {
     }
 
     private boolean isPilaValid(PilaCoin pilaCoin) {
-        boolean isValid =  MinerWorker.hashMeetsDifficulty(pilaCoin, dificuldadeAtual.get());
+        boolean isValid = MinerWorker.hashMeetsDifficulty(pilaCoin, dificuldadeAtual.get());
         if (isValid) log.info("PilaCoin is valid");
         return isValid;
     }
@@ -116,7 +119,7 @@ public class PilaService {
     }
 
     private boolean isAlreadyValidated(PilaCoin pilaCoin) {
-        boolean itsValid =  minedPilaCoins.contains(pilaCoin);
+        boolean itsValid = minedPilaCoins.contains(pilaCoin);
         if (itsValid) log.info("PilaCoin already validated");
         return itsValid;
     }
