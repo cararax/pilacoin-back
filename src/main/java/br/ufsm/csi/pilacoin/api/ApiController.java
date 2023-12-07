@@ -1,11 +1,15 @@
-package br.ufsm.csi.pilacoin.mock;
+package br.ufsm.csi.pilacoin.api;
 
 import br.ufsm.csi.pilacoin.bloco.model.Bloco;
 import br.ufsm.csi.pilacoin.bloco.model.ValidacaoBloco;
+import br.ufsm.csi.pilacoin.bloco.repository.BlocoRepository;
+import br.ufsm.csi.pilacoin.bloco.repository.ValidacaoBlocoRepository;
 import br.ufsm.csi.pilacoin.dificuldade.model.Dificuldade;
-import br.ufsm.csi.pilacoin.mock.dto.*;
+import br.ufsm.csi.pilacoin.api.dto.*;
 import br.ufsm.csi.pilacoin.pila.model.PilaCoin;
 import br.ufsm.csi.pilacoin.pila.model.ValidacaoPilaCoin;
+import br.ufsm.csi.pilacoin.pila.repository.PilaCoinRepository;
+import br.ufsm.csi.pilacoin.pila.repository.ValidacaoPilaCoinRepository;
 import br.ufsm.csi.pilacoin.query.model.Query;
 import br.ufsm.csi.pilacoin.query.model.QueryResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,7 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,20 +28,25 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @Log4j2
-public class MockController {
+public class ApiController {
 
     private final MockService service;
     private ObjectMapper mapper = new ObjectMapper();
 
+    private final PilaCoinRepository pilaCoinRepository;
+    private final ValidacaoPilaCoinRepository validacaoPilaCoinRepository;
+    private final BlocoRepository blocoRepository;
+    private final ValidacaoBlocoRepository validacaoBlocoRepository;
+
 
     @GetMapping("/pilaCoin")
     public List<PilaCoin> getPilaCoin() {
-        return service.findAllPilaCoins();
+        return pilaCoinRepository.findAll();
     }
 
     @GetMapping("/bloco")
-    public Bloco getBloco() {
-        return service.createBloco();
+    public List<Bloco> getBloco() {
+        return blocoRepository.findAll();
     }
 
     @GetMapping("/transacao")
@@ -48,12 +56,12 @@ public class MockController {
 
     @GetMapping("/validacaoPilaCoin")
     public List<ValidacaoPilaCoin> getValidacaoPilaCoin() {
-        return service.findallValidacoesPilaCoin();
+        return validacaoPilaCoinRepository.findAll();
     }
 
     @GetMapping("/validacaoBloco")
-    public ValidacaoBloco getValidacaoBloco() {
-        return service.createValidacaoBloco();
+    public List<ValidacaoBloco> getValidacaoBloco() {
+        return validacaoBlocoRepository.findAll();
     }
 
     @GetMapping("/dificuldade")
