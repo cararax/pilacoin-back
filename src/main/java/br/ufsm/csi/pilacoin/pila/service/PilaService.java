@@ -78,7 +78,7 @@ public class PilaService {
     @SneakyThrows
     @RabbitListener(queues = "${queue.pila-minerado}")
     public void validatePilaCoin(String message) {
-        if (dificuldadeAtual == null) {
+        if (dificuldadeAtual.get() == null) {
             log.info("Dificuldade não definida");
             return;
         }

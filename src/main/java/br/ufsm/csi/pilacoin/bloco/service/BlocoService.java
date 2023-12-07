@@ -3,6 +3,8 @@ package br.ufsm.csi.pilacoin.bloco.service;
 import br.ufsm.csi.pilacoin.bloco.miner.BlocoMiner;
 import br.ufsm.csi.pilacoin.bloco.model.Bloco;
 import br.ufsm.csi.pilacoin.bloco.model.ValidacaoBloco;
+import br.ufsm.csi.pilacoin.bloco.repository.BlocoRepository;
+import br.ufsm.csi.pilacoin.bloco.repository.ValidacaoBlocoRepository;
 import br.ufsm.csi.pilacoin.key.KeyPairGenerator;
 import br.ufsm.csi.pilacoin.dificuldade.model.Dificuldade;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,6 +49,9 @@ public class BlocoService {
     private String blocoValidadoQueue;
     private final Set<Bloco> minedBlocks = Collections.synchronizedSet(new HashSet<>());
 
+    private final ValidacaoBlocoRepository validacaoBlocoRepository;
+    private final BlocoRepository blocoRepository;
+
 
     public void setBlocoDifficulty(Dificuldade difficulty) {
         log.info("Dificuldade do bloco atualizada: {}", difficulty);
@@ -60,7 +65,6 @@ public class BlocoService {
 
         int numberOfThreads = 3;
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
-        log.info("Começando a minerar pilas com {} threads", numberOfThreads);
 
         for (int i = 0; i < numberOfThreads; i++) {
             BlocoMiner blocoMiner = new BlocoMiner(message, difficulty, this);
@@ -97,20 +101,22 @@ public class BlocoService {
     @SneakyThrows
     @RabbitListener(queues = "${queue.bloco-minerado}")
     public void validateBLoco(String message) {
-        if (difficulty == null) {
+        if (difficulty.get() == null) {
             log.info("Dificuldade do bloco não foi definida");
             return;
         }
         log.info("Validating Block");
         Bloco bloco = convertJsonToBloco(message);
-        if (isCreatedByCurrentUser(bloco) || isAlreadyValidated(bloco)) {
-            publishMinedBloco(bloco);
-            return;
-        }
+//        if (isCreatedByCurrentUser(bloco) || isAlreadyValidated(bloco)) {
+//            publishMinedBloco(bloco);
+//            return;
+//        }
 
         if (isBlockInvalid(bloco)) return;
         ValidacaoBloco validated = createValidacaoBloco(bloco);
         //todo: salvar no banco
+        validacaoBlocoRepository.save(validated);
+        blocoRepository.save(bloco);
         minedBlocks.add(bloco);
         publishValidatedBloco(validated);
         log.info("Bloco validated and sent to queue");
@@ -196,3 +202,5 @@ public class BlocoService {
 
     }
 }
+
+
