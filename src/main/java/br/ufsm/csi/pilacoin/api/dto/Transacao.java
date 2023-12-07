@@ -1,6 +1,7 @@
 package br.ufsm.csi.pilacoin.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,6 +15,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @EqualsAndHashCode
 @ToString
 @Document
+@JsonPropertyOrder(alphabetic = true)
 @JsonInclude(NON_NULL)
 public class Transacao {
     private byte[] chaveUsuarioOrigem;

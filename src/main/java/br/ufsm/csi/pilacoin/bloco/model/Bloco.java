@@ -21,7 +21,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonPropertyOrder(alphabetic = true)
 @JsonInclude(NON_NULL)
 public class Bloco {
-    private Integer numeroBloco;
+    private Long numeroBloco;
     private String nonceBlocoAnterior;
     private String nonce;
     private byte[] chaveUsuarioMinerador;

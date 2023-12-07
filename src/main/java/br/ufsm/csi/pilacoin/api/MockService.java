@@ -58,20 +58,20 @@ public class MockService {
     private  final Integer numeroBloco = 1;
     private  final String nomeUsuarioMinerador = "minerador";
 
-    public Bloco createBloco() {
-        List<Transacao> transacoes = Arrays
-                .asList(createTransacao("tr1"),
-                        createTransacao("tr2"),
-                        createTransacao("tr3"));
-        return Bloco.builder()
-                .numeroBloco(numeroBloco)
-                .nonceBlocoAnterior(nonce)
-                .nonce(nonce)
-                .chaveUsuarioMinerador(chavePublica)
-                .nomeUsuarioMinerador(nomeUsuarioMinerador)
-                .transacoes(transacoes)
-                .build();
-    }
+//    public Bloco createBloco() {
+//        List<Transacao> transacoes = Arrays
+//                .asList(createTransacao("tr1"),
+//                        createTransacao("tr2"),
+//                        createTransacao("tr3"));
+//        return Bloco.builder()
+//                .numeroBloco(numeroBloco)
+//                .nonceBlocoAnterior(nonce)
+//                .nonce(nonce)
+//                .chaveUsuarioMinerador(chavePublica)
+//                .nomeUsuarioMinerador(nomeUsuarioMinerador)
+//                .transacoes(transacoes)
+//                .build();
+//    }
 
     // Validacao
     private  final String nomeValidador = "validador";
@@ -85,14 +85,14 @@ public class MockService {
                 .build();
     }
 
-    public ValidacaoBloco createValidacaoBloco() {
-        return ValidacaoBloco.builder()
-                .nomeValidador(nomeValidador)
-                .chavePublicaValidador(chavePublica)
-                .assinaturaBloco(assinatura)
-                .bloco(createBloco())
-                .build();
-    }
+//    public ValidacaoBloco createValidacaoBloco() {
+//        return ValidacaoBloco.builder()
+//                .nomeValidador(nomeValidador)
+//                .chavePublicaValidador(chavePublica)
+//                .assinaturaBloco(assinatura)
+//                .bloco(createBloco())
+//                .build();
+//    }
 
     // Dificuldade
     private  final String dificuldade = "123456";
