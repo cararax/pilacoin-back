@@ -1,4 +1,4 @@
-package br.ufsm.csi.pilacoin.mock.dto;
+package br.ufsm.csi.pilacoin.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
