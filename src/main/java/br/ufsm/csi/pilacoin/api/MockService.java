@@ -1,4 +1,4 @@
-package br.ufsm.csi.pilacoin.mock;
+package br.ufsm.csi.pilacoin.api;
 
 
 import java.util.Arrays;
@@ -7,7 +7,7 @@ import java.util.List;
 import br.ufsm.csi.pilacoin.bloco.model.Bloco;
 import br.ufsm.csi.pilacoin.bloco.model.ValidacaoBloco;
 import br.ufsm.csi.pilacoin.dificuldade.model.Dificuldade;
-import br.ufsm.csi.pilacoin.mock.dto.*;
+import br.ufsm.csi.pilacoin.api.dto.*;
 import br.ufsm.csi.pilacoin.pila.model.PilaCoin;
 import br.ufsm.csi.pilacoin.pila.repository.PilaCoinRepository;
 import br.ufsm.csi.pilacoin.pila.model.ValidacaoPilaCoin;
