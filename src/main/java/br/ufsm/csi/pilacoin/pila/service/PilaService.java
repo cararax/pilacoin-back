@@ -1,7 +1,7 @@
 package br.ufsm.csi.pilacoin.pila.service;
 
 import br.ufsm.csi.pilacoin.key.KeyPairGenerator;
-import br.ufsm.csi.pilacoin.pila.miner.MinerWorker;
+import br.ufsm.csi.pilacoin.pila.miner.PilaMiner;
 import br.ufsm.csi.pilacoin.dificuldade.model.Dificuldade;
 import br.ufsm.csi.pilacoin.pila.repository.PilaCoinRepository;
 import br.ufsm.csi.pilacoin.pila.repository.ValidacaoPilaCoinRepository;
@@ -44,7 +44,7 @@ public class PilaService {
     @Value("${pilacoin.username:carara-schmitzhaus}")
     private String username;
 
-    private MinerWorker minerWorker;
+    private PilaMiner pilaMiner;
     private ObjectMapper mapper = new ObjectMapper();
 
     private final PilaCoinRepository pilaCoinRepository;
@@ -53,31 +53,35 @@ public class PilaService {
 
     public void startMining(Dificuldade dificuldade) {
         this.dificuldadeAtual.set(dificuldade);
-        int threadNumber = 1;// Runtime.getRuntime().availableProcessors();
-        log.info("Começando a minerar com a nova dificuldade: {}", dificuldadeAtual);
+        int threadNumber = 3;// Runtime.getRuntime().availableProcessors();
+        log.info("Começando a minerar pilas com a nova dificuldade: {}", dificuldadeAtual);
         log.info("Número de threads: {}", threadNumber);
 
         for (int i = 0; i < threadNumber; i++) {
-            minerWorker = new MinerWorker("Thread-" + i, dificuldadeAtual, keyPairGenerator, this);
-            minerWorker.start();
+            pilaMiner = new PilaMiner("Thread-" + i, dificuldadeAtual, keyPairGenerator, this);
+            pilaMiner.start();
         }
     }
 
     @SneakyThrows
     public void publishMinedPila(PilaCoin pilaCoin) {
         rabbitTemplate.convertAndSend(pilaMineradoQueue, convertToJson(pilaCoin));
-        log.info("PilaCoin sent to mined queue");
+        log.info("Mined PilaCoin sent to mined queue");
     }
 
     @SneakyThrows
     public void publishValidatedPila(ValidacaoPilaCoin validatedPilaCoin) {
         rabbitTemplate.convertAndSend(pilaValidadoQueue, convertToJson(validatedPilaCoin));
-        log.info("PilaCoin sent to validated queue");
+        log.info("Valid PilaCoin sent to validated queue");
     }
 
     @SneakyThrows
     @RabbitListener(queues = "${queue.pila-minerado}")
     public void validatePilaCoin(String message) {
+        if (dificuldadeAtual == null) {
+            log.info("Dificuldade não definida");
+            return;
+        }
         log.info("Validating PilaCoin");
         PilaCoin pilaCoin = convertJsonToPilaCoin(message);
         //todo: exceção quando nao tem dificuldade
@@ -87,7 +91,6 @@ public class PilaService {
         }
 
         if (isPilaInvalid(pilaCoin)) return;
-        log.error("VALIDOU");
         ValidacaoPilaCoin validated = generateValidationMessage(pilaCoin);
         pilaCoinRepository.save(pilaCoin);
         validacaoRepository.save(validated);
@@ -101,7 +104,7 @@ public class PilaService {
     }
 
     private boolean isPilaValid(PilaCoin pilaCoin) {
-        boolean isValid = MinerWorker.hashMeetsDifficulty(pilaCoin, dificuldadeAtual.get());
+        boolean isValid = PilaMiner.hashMeetsDifficulty(pilaCoin, dificuldadeAtual.get());
         if (isValid) log.info("PilaCoin is valid");
         return isValid;
     }
@@ -115,12 +118,6 @@ public class PilaService {
         boolean itsMine = pilaCoin.getNomeCriador().equals(username);
         if (itsMine) log.info("PilaCoin created by current user");
         return itsMine;
-    }
-
-    @SneakyThrows
-    private void resendToQueue(PilaCoin pilaCoin) {
-        rabbitTemplate.convertAndSend(pilaMineradoQueue, convertToJson(pilaCoin));
-        log.info("PilaCoin resent to queue");
     }
 
     private boolean isAlreadyValidated(PilaCoin pilaCoin) {

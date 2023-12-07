@@ -1,6 +1,6 @@
 package br.ufsm.csi.pilacoin.bloco.service;
 
-import br.ufsm.csi.pilacoin.bloco.miner.BlockProcessor;
+import br.ufsm.csi.pilacoin.bloco.miner.BlocoMiner;
 import br.ufsm.csi.pilacoin.bloco.model.Bloco;
 import br.ufsm.csi.pilacoin.bloco.model.ValidacaoBloco;
 import br.ufsm.csi.pilacoin.key.KeyPairGenerator;
@@ -56,14 +56,15 @@ public class BlocoService {
     @SneakyThrows
     @RabbitListener(queues = "${queue.descobre-bloco}")
     public void listen(String message) {
-        log.error("Bloco recebido: {}", message);
+        log.info("Bloco recebido pela fila descobre-bloco", message);
 
-        int numberOfThreads = 1; //altere conforme necessário
+        int numberOfThreads = 3;
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
+        log.info("Começando a minerar pilas com {} threads", numberOfThreads);
 
         for (int i = 0; i < numberOfThreads; i++) {
-            BlockProcessor blockProcessor = new BlockProcessor(message, difficulty, this);
-            executorService.submit(blockProcessor);
+            BlocoMiner blocoMiner = new BlocoMiner(message, difficulty, this);
+            executorService.submit(blocoMiner);
         }
 
         executorService.shutdown();
@@ -72,7 +73,7 @@ public class BlocoService {
         return hashMeetsDifficulty(bloco, difficulty.get());
     }
 
-    private Bloco convertJsonToPilaCoin(String message) throws JsonProcessingException {
+    public Bloco convertJsonToBloco(String message) throws JsonProcessingException {
         return mapper.readValue(message, Bloco.class);
     }
     @SneakyThrows
@@ -81,40 +82,42 @@ public class BlocoService {
     }
 
     @SneakyThrows
-    public void publishMinedBlock(Bloco bloco) {
+    public void publishMinedBloco(Bloco bloco) {
         rabbitTemplate.convertAndSend(blocoMineradoQueue, convertToJson(bloco));
-        log.info("Block sent to mined queue");
+        log.info("Mined Block sent to mined queue");
     }
 
     @SneakyThrows
-    public void publishValidatedBlock(ValidacaoBloco validacaoBloco) {
+    public void publishValidatedBloco(ValidacaoBloco validacaoBloco) {
         rabbitTemplate.convertAndSend(blocoValidadoQueue, convertToJson(validacaoBloco));
-        log.error("Block sent to validated queue");
+        log.info("Valid Block sent to validated queue");
     }
 
 
     @SneakyThrows
     @RabbitListener(queues = "${queue.bloco-minerado}")
     public void validateBLoco(String message) {
+        if (difficulty == null) {
+            log.info("Dificuldade do bloco não foi definida");
+            return;
+        }
         log.info("Validating Block");
-        Bloco bloco = convertJsonToPilaCoin(message);
-        //todo: exceção quando nao tem dificuldade
+        Bloco bloco = convertJsonToBloco(message);
         if (isCreatedByCurrentUser(bloco) || isAlreadyValidated(bloco)) {
-            publishMinedBlock(bloco);
+            publishMinedBloco(bloco);
             return;
         }
 
         if (isBlockInvalid(bloco)) return;
-        log.error("VALIDOU");
         ValidacaoBloco validated = createValidacaoBloco(bloco);
         //todo: salvar no banco
         minedBlocks.add(bloco);
-        publishValidatedBlock(validated);
-        log.info("PilaCoin validated and sent to queue");
+        publishValidatedBloco(validated);
+        log.info("Bloco validated and sent to queue");
     }
     private boolean isBlockValid(Bloco bloco) {
         boolean isValid = hashMeetsDifficulty(bloco, difficulty.get());
-        if (isValid) log.info("PilaCoin is valid");
+        if (isValid) log.info("Bloco is valid");
         return isValid;
     }
 
@@ -134,13 +137,13 @@ public class BlocoService {
     }
     public boolean isAlreadyValidated(Bloco bloco) {
         boolean itsValid = minedBlocks.contains(bloco);
-        if (itsValid) log.info("PilaCoin already validated");
+        if (itsValid) log.info("Bloco already validated");
         return itsValid;
     }
     public boolean isCreatedByCurrentUser(Bloco bloco) {
         if (bloco.getNomeUsuarioMinerador() == null) return false;
         boolean itsMine = bloco.getNomeUsuarioMinerador().equals(username);
-        if (itsMine) log.info("PilaCoin created by current user");
+        if (itsMine) log.info("Bloco created by current user");
         return false;
     }
     public Bloco populateBloco(Bloco bloco) {

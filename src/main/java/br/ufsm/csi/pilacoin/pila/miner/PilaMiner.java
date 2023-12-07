@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Log4j2
 @RequiredArgsConstructor
-public class MinerWorker implements Runnable {
+public class PilaMiner implements Runnable {
     private Thread thread;
     private final String threadName;
     private final SecureRandom random = new SecureRandom();
@@ -31,8 +31,7 @@ public class MinerWorker implements Runnable {
     private final PilaService pilaService;
     private static ObjectMapper mapper = new ObjectMapper();
 
-
-    public MinerWorker(String name, AtomicReference<Dificuldade> difficulty, KeyPairGenerator keyPairGenerator, PilaService pilaService) {
+    public PilaMiner(String name, AtomicReference<Dificuldade> difficulty, KeyPairGenerator keyPairGenerator, PilaService pilaService) {
         threadName = name;
         this.difficulty = difficulty;
         this.keyPairGenerator = keyPairGenerator;
@@ -51,7 +50,6 @@ public class MinerWorker implements Runnable {
 
         return hashNum.compareTo(difficultyNum) < 0;
     }
-
 
     private static String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
@@ -89,7 +87,6 @@ public class MinerWorker implements Runnable {
         return hashMeetsDifficulty(pilaCoin, difficulty.get());
     }
 
-
     private PilaCoin createPilaCoin() {
         return PilaCoin.builder()
                 .nomeCriador(username)
@@ -106,5 +103,4 @@ public class MinerWorker implements Runnable {
             thread.start();
         }
     }
-
 }
