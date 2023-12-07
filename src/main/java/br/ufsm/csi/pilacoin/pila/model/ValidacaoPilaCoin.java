@@ -16,7 +16,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @Document
 @JsonInclude(NON_NULL)
 public class ValidacaoPilaCoin {
-    private String id;
     private String nomeValidador;
     private byte[] chavePublicaValidador;
     private byte[] assinaturaPilaCoin;

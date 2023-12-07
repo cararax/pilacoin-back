@@ -12,6 +12,9 @@ import br.ufsm.csi.pilacoin.pila.repository.PilaCoinRepository;
 import br.ufsm.csi.pilacoin.pila.repository.ValidacaoPilaCoinRepository;
 import br.ufsm.csi.pilacoin.query.model.Query;
 import br.ufsm.csi.pilacoin.query.model.QueryResponse;
+import br.ufsm.csi.pilacoin.query.model.UsuarioResult;
+import br.ufsm.csi.pilacoin.query.service.QueryService;
+import br.ufsm.csi.pilacoin.usuario.UsuarioRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +34,14 @@ import java.util.List;
 public class ApiController {
 
     private final MockService service;
+    private final QueryService queryService;
     private ObjectMapper mapper = new ObjectMapper();
 
     private final PilaCoinRepository pilaCoinRepository;
     private final ValidacaoPilaCoinRepository validacaoPilaCoinRepository;
     private final BlocoRepository blocoRepository;
     private final ValidacaoBlocoRepository validacaoBlocoRepository;
+    private final UsuarioRepository usuarioRepository;
 
 
     @GetMapping("/pilaCoin")
@@ -67,6 +72,10 @@ public class ApiController {
     @GetMapping("/dificuldade")
     public Dificuldade getDificuldade() {
         return service.createDificuldade();
+    }
+    @GetMapping("/usuario")
+    public List<UsuarioResult> getUsuario() {
+        return usuarioRepository.findAll();
     }
 
     @PostMapping("/transacao")

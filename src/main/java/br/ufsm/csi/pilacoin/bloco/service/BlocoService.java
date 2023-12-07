@@ -107,10 +107,10 @@ public class BlocoService {
         }
         log.info("Validating Block");
         Bloco bloco = convertJsonToBloco(message);
-//        if (isCreatedByCurrentUser(bloco) || isAlreadyValidated(bloco)) {
-//            publishMinedBloco(bloco);
-//            return;
-//        }
+        if (isCreatedByCurrentUser(bloco) || isAlreadyValidated(bloco)) {
+            publishMinedBloco(bloco);
+            return;
+        }
 
         if (isBlockInvalid(bloco)) return;
         ValidacaoBloco validated = createValidacaoBloco(bloco);
@@ -150,7 +150,7 @@ public class BlocoService {
         if (bloco.getNomeUsuarioMinerador() == null) return false;
         boolean itsMine = bloco.getNomeUsuarioMinerador().equals(username);
         if (itsMine) log.info("Bloco created by current user");
-        return false;
+        return itsMine;
     }
     public Bloco populateBloco(Bloco bloco) {
         bloco.setChaveUsuarioMinerador(keyPairGenerator.getPublicKey().toString().getBytes(StandardCharsets.UTF_8));

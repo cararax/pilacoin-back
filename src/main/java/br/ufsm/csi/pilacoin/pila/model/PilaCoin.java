@@ -13,10 +13,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-@Document
 @JsonInclude(NON_NULL)
 public class PilaCoin {
-    private String id;
     private Long dataCriacao;
     private byte[] chaveCriador;
     private String nomeCriador;

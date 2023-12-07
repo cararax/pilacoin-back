@@ -21,7 +21,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonPropertyOrder(alphabetic = true)
 @JsonInclude(NON_NULL)
 public class Bloco {
-    private String id;
     private Integer numeroBloco;
     private String nonceBlocoAnterior;
     private String nonce;
