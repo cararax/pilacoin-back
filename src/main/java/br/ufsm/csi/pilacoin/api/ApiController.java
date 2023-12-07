@@ -14,12 +14,16 @@ import br.ufsm.csi.pilacoin.query.model.Query;
 import br.ufsm.csi.pilacoin.query.model.QueryResponse;
 import br.ufsm.csi.pilacoin.query.model.UsuarioResult;
 import br.ufsm.csi.pilacoin.query.service.QueryService;
+import br.ufsm.csi.pilacoin.transferir.TransacaoResponse;
+import br.ufsm.csi.pilacoin.transferir.TransferenciaPilaRequest;
+import br.ufsm.csi.pilacoin.transferir.TransferenciaPilaService;
 import br.ufsm.csi.pilacoin.usuario.UsuarioRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +46,14 @@ public class ApiController {
     private final BlocoRepository blocoRepository;
     private final ValidacaoBlocoRepository validacaoBlocoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final TransferenciaPilaService transferenciaPilaService;
 
 
+    @PostMapping("/transferir")
+    public ResponseEntity<String> transferirPila(@RequestBody TransferenciaPilaRequest request) {
+        transferenciaPilaService.transferirPila(request);
+        return ResponseEntity.ok("Transação enviada para mineração");
+    }
     @GetMapping("/pilaCoin")
     public List<PilaCoin> getPilaCoin() {
         return pilaCoinRepository.findAll();
