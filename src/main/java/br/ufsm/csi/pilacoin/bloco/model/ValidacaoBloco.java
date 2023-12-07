@@ -12,6 +12,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @ToString
 @JsonInclude(NON_NULL)
 public class ValidacaoBloco {
+    private String id;
     private String nomeValidador;
     private byte[] chavePublicaValidador;
     private byte[] assinaturaBloco;

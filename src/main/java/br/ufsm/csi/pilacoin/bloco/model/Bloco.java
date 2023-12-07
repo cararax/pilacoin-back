@@ -1,6 +1,6 @@
 package br.ufsm.csi.pilacoin.bloco.model;
 
-import br.ufsm.csi.pilacoin.mock.dto.Transacao;
+import br.ufsm.csi.pilacoin.api.dto.Transacao;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
@@ -21,6 +21,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonPropertyOrder(alphabetic = true)
 @JsonInclude(NON_NULL)
 public class Bloco {
+    private String id;
     private Integer numeroBloco;
     private String nonceBlocoAnterior;
     private String nonce;
